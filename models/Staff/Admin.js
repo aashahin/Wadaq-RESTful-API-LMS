@@ -1,19 +1,21 @@
-const {Schema,model} = require("mongoose");
+const { Schema, model } = require("mongoose");
+const bcrypt = require("bcryptjs");
+
 const adminSchema = new Schema(
   {
     name: {
       type: String,
       required: [true, "Please Enter Your Name."],
     },
-    username: {
-      type: String,
-      default: () => {
-        return (
-          this.name.split(" ").join("").toLowerCase() +
-          Math.floor(Math.random() * 1000)
-        );
-      },
-    },
+    // username: {
+    //   type: String,
+    //   default: () => {
+    //     return (
+    //       this.name.split(" ").join("").toLowerCase() +
+    //       Math.floor(Math.random() * 1000)
+    //     );
+    //   },
+    // },
     avatar: {
       type: String,
       default:
@@ -27,6 +29,15 @@ const adminSchema = new Schema(
       type: String,
       required: [true, "Please Enter Your Password."],
     },
+    isAccountVerified: {
+      type: Boolean,
+      default: false,
+    },
+    accountVerificationCode: String,
+    accountVerificationCodeExpire: Date,
+    passwordChangedAt: Date,
+    passwordResetCode: String,
+    passwordResetExpire: Date,
     role: {
       type: String,
       default: "admin",
@@ -35,4 +46,9 @@ const adminSchema = new Schema(
   { timestamps: true }
 );
 
+adminSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+  this.password = await bcrypt.hash(this.password, 12);
+  next();
+});
 module.exports = model("Admin", adminSchema);

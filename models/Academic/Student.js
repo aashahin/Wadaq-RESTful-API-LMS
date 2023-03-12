@@ -60,11 +60,13 @@ const studentSchema = new Schema(
         return this.classLevels[this.classLevels.length - 1];
       },
     },
-    programs: [{
-      type: Schema.Types.ObjectId,
-      ref: "Program",
-      required: [true, "Please Enter Your Program."],
-    }],
+    programs: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Program",
+        required: [true, "Please Enter Your Program."],
+      },
+    ],
     currentProgram: {
       type: Schema.Types.ObjectId,
       default: () => {

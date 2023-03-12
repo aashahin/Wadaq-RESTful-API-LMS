@@ -1,64 +1,67 @@
-const {Schema, model} = require('mongoose');
+const { Schema, model } = require("mongoose");
 
-const examResultSchema = new Schema({
+const examResultSchema = new Schema(
+  {
     exam: {
-        type: Schema.Types.ObjectId,
-        ref: 'Exam',
-        required: [true, 'Please Enter Your Exam.']
+      type: Schema.Types.ObjectId,
+      ref: "Exam",
+      required: [true, "Please Enter Your Exam."],
     },
     student: {
-        type: Schema.Types.ObjectId,
-        ref: 'Student',
-        required: [true, 'Please Enter Your Student.']
+      type: Schema.Types.ObjectId,
+      ref: "Student",
+      required: [true, "Please Enter Your Student."],
     },
     score: {
-        type: Number,
-        required: [true, 'Please Enter Your Score.']
+      type: Number,
+      required: [true, "Please Enter Your Score."],
     },
     passMark: {
-        type: Number,
-        required: [true, 'Please Enter Your Pass Mark.']
+      type: Number,
+      required: [true, "Please Enter Your Pass Mark."],
     },
     status: {
-        type: String,
-        enum: ['Pass', 'Fail'],
-        default: 'Fail',
+      type: String,
+      enum: ["Pass", "Fail"],
+      default: "Fail",
     },
     remarks: {
-        type: String,
-        required: [true, 'Please Enter Your Remarks.']
+      type: String,
+      required: [true, "Please Enter Your Remarks."],
     },
     position: {
-        type: Number,
-        required: [true, 'Please Enter Your Position.']
+      type: Number,
+      required: [true, "Please Enter Your Position."],
     },
     subject: {
-        type: Schema.Types.ObjectId,
-        ref: 'Subject',
+      type: Schema.Types.ObjectId,
+      ref: "Subject",
     },
     classLevel: {
-        type: Schema.Types.ObjectId,
-        ref: 'ClassLevel',
+      type: Schema.Types.ObjectId,
+      ref: "ClassLevel",
     },
     academicYear: {
-        type: Schema.Types.ObjectId,
-        ref: 'AcademicYear',
-        required: [true, 'Please Enter Your Academic Year.']
+      type: Schema.Types.ObjectId,
+      ref: "AcademicYear",
+      required: [true, "Please Enter Your Academic Year."],
     },
     academicTerm: {
-        type: Schema.Types.ObjectId,
-        ref: 'AcademicTerm',
-        required: [true, 'Please Enter Your Academic Term.']
+      type: Schema.Types.ObjectId,
+      ref: "AcademicTerm",
+      required: [true, "Please Enter Your Academic Term."],
     },
     isPublished: {
-        type: Boolean,
-        default: false
+      type: Boolean,
+      default: false,
     },
     createdBy: {
-        type: Schema.Types.ObjectId,
-        ref: 'Teacher',
-        required: [true, 'Please Enter Your Teacher.']
-    }
-}, {timestamps: true});
+      type: Schema.Types.ObjectId,
+      ref: "Teacher",
+      required: [true, "Please Enter Your Teacher."],
+    },
+  },
+  { timestamps: true }
+);
 
-module.exports = model('ExamResult', examResultSchema);
+module.exports = model("ExamResult", examResultSchema);

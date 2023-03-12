@@ -1,20 +1,29 @@
 // External
-require("dotenv").config({ path: ".env" });
+require("dotenv").config();
 const express = require("express"),
   app = express(),
   server = require("http").createServer(app);
-  morgan = require("morgan");
+morgan = require("morgan");
 
 // Internal
-const { dbConnection } = require("./config/DB");
+require("./config/db");
+const { routes } = require("./routes");
+const { globalErrors } = require("./middlewares/Errors/GlobalError");
+const ErrorHandler = require("./middlewares/Errors/ErrorHandler");
 
 if (process.env.NODE_MODE === "development") {
   app.use(morgan("dev"));
   console.log(`Server Mode: ${process.env.NODE_MODE}`);
 }
 
-// Database
-dbConnection();
+app.use(express.json());
+// Routes
+routes(app);
+
+app.all("*", (req, res, next) => {
+  next(new ErrorHandler(`Can't Find This Route: ${req.originalUrl}`, 404));
+});
+app.use(globalErrors);
 // Setup Server
 const PORT = process.env.PORT || 4000;
 const onServer = server.listen(PORT, () => {
