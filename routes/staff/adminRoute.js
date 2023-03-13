@@ -6,9 +6,12 @@ const router = express.Router();
 const {
   signupAdmin,
   loginAdmin,
+  getAllAdmins,
+  getProfileAdmin, updateProfileAdmin,
 } = require("../../services/staff/adminServices");
 const Auth = require("../../middlewares/Auth/Auth");
 const model = require("../../models/Staff/Admin");
+const {permissions} = require("../../middlewares/Auth/permissions");
 
 // Routes
 // SignUp
@@ -16,11 +19,11 @@ router.route("/signup").post(signupAdmin);
 // Login
 router.route("/login").post(loginAdmin);
 // Get All
-router.route("/").get(Auth(model));
-// Get One
-router.route("/:id").get();
+router.route("/").get(Auth(model),permissions(["admin"]), getAllAdmins);
+// Get Profile
+router.route("/profile").get(Auth(model),permissions(["admin"]), getProfileAdmin);
 // Update
-router.route("/:id").patch();
+router.route("/profile").patch(Auth(model),permissions(["admin"]),updateProfileAdmin);
 // Delete
 router.route("/:id").delete();
 router.route("/suspend/teacher/:id").patch();

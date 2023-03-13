@@ -112,12 +112,6 @@ const studentSchema = new Schema(
         ref: "Achievement",
       },
     ],
-    // financialsReport: [
-    //   {
-    //     type: Schema.Types.ObjectId,
-    //     ref: "FinancialsReport",
-    //   },
-    // ],
   },
   { timestamps: true }
 );
