@@ -10,14 +10,6 @@ const academicTermSchema = new Schema(
       type: String,
       required: [true, "Please Enter Academic Term Description."],
     },
-    startDate: {
-      type: Date,
-      required: [true, "Please Enter Academic Term Start Date."],
-    },
-    endDate: {
-      type: Date,
-      required: [true, "Please Enter Academic Term End Date."],
-    },
     duration: {
       type: String,
       default: "3 Months",

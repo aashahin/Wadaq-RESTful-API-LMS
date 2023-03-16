@@ -26,9 +26,13 @@ exports.createAcademicYear = expressAsyncHandler(async (req, res, next) => {
     endDate,
     createdBy: req?.user._id,
   });
-await Admin.findByIdAndUpdate(req?.user._id,{
-      $push: {academicYears: academicYear?._id}
-  },{new:true})
+  await Admin.findByIdAndUpdate(
+    req?.user._id,
+    {
+      $push: { academicYears: academicYear?._id },
+    },
+    { new: true }
+  );
 
   res?.json({
     status: "success",
@@ -58,9 +62,9 @@ exports.getAllAcademicYears = expressAsyncHandler(async (req, res) => {
  * @method GET
  * @access Admin
  * */
-exports.getAcademicYear = expressAsyncHandler(async (req, res,next) => {
+exports.getAcademicYear = expressAsyncHandler(async (req, res, next) => {
   const academicYear = await AcademicYear.findById(req?.params.id);
-  if(!academicYear) return next(new ErrorHandler("Invalid id",404));
+  if (!academicYear) return next(new ErrorHandler("Invalid id", 404));
   res?.json({
     status: "success",
     data: academicYear,
@@ -75,23 +79,26 @@ exports.getAcademicYear = expressAsyncHandler(async (req, res,next) => {
  * @access Admin
  * */
 exports.updateAcademicYear = expressAsyncHandler(async (req, res, next) => {
-    const { name, startDate, endDate } = req?.body;
-    const {id} = req?.params;
+  const { name, startDate, endDate } = req?.body;
+  const { id } = req?.params;
 
-    const checkExisted = await AcademicYear.findById(id);
-    if (!checkExisted)
-        return next(new ErrorHandler("Invalid id", 404));
+  const checkExisted = await AcademicYear.findById(id);
+  if (!checkExisted) return next(new ErrorHandler("Invalid id", 404));
 
-    const academicYear = await AcademicYear.findByIdAndUpdate(id,{
-        name: name || checkExisted?.name,
-        startDate: startDate || checkExisted?.startDate,
-        endDate: endDate || checkExisted?.endDate,
-    },{new:true});
+  const academicYear = await AcademicYear.findByIdAndUpdate(
+    id,
+    {
+      name: name || checkExisted?.name,
+      startDate: startDate || checkExisted?.startDate,
+      endDate: endDate || checkExisted?.endDate,
+    },
+    { new: true }
+  );
 
-    res?.json({
-        status: "success",
-        data: academicYear,
-    });
+  res?.json({
+    status: "success",
+    data: academicYear,
+  });
 });
 
 // Delete
@@ -101,15 +108,20 @@ exports.updateAcademicYear = expressAsyncHandler(async (req, res, next) => {
  * @method DELETE
  * @access Admin
  * */
-exports.deleteAcademicYear = expressAsyncHandler(async (req, res,next) => {
-    const academicYear = await AcademicYear.findByIdAndDelete(req?.params.id,{new: true});
-    await Admin.findByIdAndUpdate(req?.user._id,{
-        $pull: {academicYears: academicYear?._id}
-    },{new:true})
+exports.deleteAcademicYear = expressAsyncHandler(async (req, res, next) => {
+  const academicYear = await AcademicYear.findByIdAndDelete(req?.params.id, {
+    new: true,
+  });
+  await Admin.findByIdAndUpdate(
+    req?.user._id,
+    {
+      $pull: { academicYears: academicYear?._id },
+    },
+    { new: true }
+  );
 
-    if(!academicYear) return next(new ErrorHandler("Invalid id",404));
-    res?.json({
-        status: "success",
-    });
+  if (!academicYear) return next(new ErrorHandler("Invalid id", 404));
+  res?.json({
+    status: "success",
+  });
 });
-
