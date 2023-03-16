@@ -20,10 +20,10 @@ exports.sanitizeAdmins = (admin) => {
     students: admin.students,
   };
 };
-exports.sanitizeProfileAdmin = (data,name,email,avatar)=>{
+exports.sanitizeProfileAdmin = (data, name, email, avatar) => {
   return {
     name: name || data.name,
     email: email || data.email,
     avatar: avatar || data.avatar,
   };
-}
+};

@@ -6,10 +6,6 @@ const academicYearSchema = new Schema(
       type: String,
       required: [true, "Please Enter Academic Year Name."],
     },
-    description: {
-      type: String,
-      required: [true, "Please Enter Academic Year Description."],
-    },
     startDate: {
       type: Date,
       required: [true, "Please Enter Academic Year Start Date."],
@@ -18,7 +14,7 @@ const academicYearSchema = new Schema(
       type: Date,
       required: [true, "Please Enter Academic Year End Date."],
     },
-    isActive: {
+    isCurrent: {
       type: Boolean,
       default: false,
     },

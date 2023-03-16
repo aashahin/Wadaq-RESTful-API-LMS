@@ -7,11 +7,12 @@ const {
   signupAdmin,
   loginAdmin,
   getAllAdmins,
-  getProfileAdmin, updateProfileAdmin,
+  getProfileAdmin,
+  updateProfileAdmin,
 } = require("../../services/staff/adminServices");
 const Auth = require("../../middlewares/Auth/Auth");
 const model = require("../../models/Staff/Admin");
-const {permissions} = require("../../middlewares/Auth/permissions");
+const { permissions } = require("../../middlewares/Auth/permissions");
 
 // Routes
 // SignUp
@@ -19,11 +20,15 @@ router.route("/signup").post(signupAdmin);
 // Login
 router.route("/login").post(loginAdmin);
 // Get All
-router.route("/").get(Auth(model),permissions(["admin"]), getAllAdmins);
+router.route("/").get(Auth(model), permissions(["admin"]), getAllAdmins);
 // Get Profile
-router.route("/profile").get(Auth(model),permissions(["admin"]), getProfileAdmin);
+router
+  .route("/profile")
+  .get(Auth(model), permissions(["admin"]), getProfileAdmin);
 // Update
-router.route("/profile").patch(Auth(model),permissions(["admin"]),updateProfileAdmin);
+router
+  .route("/profile")
+  .patch(Auth(model), permissions(["admin"]), updateProfileAdmin);
 // Delete
 router.route("/:id").delete();
 router.route("/suspend/teacher/:id").patch();
