@@ -60,6 +60,12 @@ const adminSchema = new Schema(
         ref: "ClassLevel",
       },
     ],
+    programs: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Program",
+      },
+    ],
     teachers: [
       {
         type: Schema.Types.ObjectId,

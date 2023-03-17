@@ -16,6 +16,7 @@ exports.sanitizeAdmins = (admin) => {
     academicTerms: admin.academicTerms,
     academicYears: admin.academicYears,
     classLevels: admin.classLevels,
+    programs: admin.programs,
     teachers: admin.teachers,
     students: admin.students,
   };
