@@ -8,7 +8,7 @@ const ErrorHandler = require("../../middlewares/Errors/ErrorHandler");
 
 // Create
 /*
- * @desc Create Academic Term
+ * @desc Create Program
  * @route /api/v1/academic/program
  * @method POST
  * @access Admin
@@ -18,7 +18,7 @@ exports.createProgram = expressAsyncHandler(async (req, res, next) => {
 
   const checkExisted = await Program.findOne({ name });
   if (checkExisted)
-    return next(new ErrorHandler("This Academic Term is already exist", 401));
+    return next(new ErrorHandler("This Program is already exist", 401));
 
   const program = await Program.create({
     name,
@@ -42,7 +42,7 @@ exports.createProgram = expressAsyncHandler(async (req, res, next) => {
 
 // Get All
 /*
- * @desc Get All Academic Terms
+ * @desc Get All Programs
  * @route /api/v1/academic/program
  * @method GET
  * @access Admin
@@ -57,7 +57,7 @@ exports.getAllPrograms = expressAsyncHandler(async (req, res) => {
 
 // Get One
 /*
- * @desc Get Academic Term
+ * @desc Get Program
  * @route /api/v1/academic/program/:id
  * @method GET
  * @access Admin
@@ -73,7 +73,7 @@ exports.getProgram = expressAsyncHandler(async (req, res, next) => {
 
 // Update
 /*
- * @desc Update Academic Term
+ * @desc Update Program
  * @route /api/v1/academic/program/:id
  * @method PATCH
  * @access Admin
@@ -103,7 +103,7 @@ exports.updateProgram = expressAsyncHandler(async (req, res, next) => {
 
 // Delete
 /*
- * @desc Delete Academic Term
+ * @desc Delete Program
  * @route /api/v1/academic/program/:id
  * @method DELETE
  * @access Admin

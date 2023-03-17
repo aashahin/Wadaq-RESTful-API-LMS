@@ -13,7 +13,6 @@ const subjectSchema = new Schema(
     teacher: {
       type: Schema.Types.ObjectId,
       ref: "Teacher",
-      required: [true, "Please Enter Subject Teacher."],
     },
     academicTerm: {
       type: Schema.Types.ObjectId,
