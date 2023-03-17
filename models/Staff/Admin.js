@@ -66,6 +66,12 @@ const adminSchema = new Schema(
         ref: "Program",
       },
     ],
+    yearGroups: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "YearGroup",
+      },
+    ],
     teachers: [
       {
         type: Schema.Types.ObjectId,

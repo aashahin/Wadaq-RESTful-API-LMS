@@ -16,7 +16,7 @@ const ErrorHandler = require("../../middlewares/Errors/ErrorHandler");
  * */
 exports.createSubject = expressAsyncHandler(async (req, res, next) => {
   const { name, description } = req?.body;
-  const {programId,academicTermId} = req?.params;
+  const { programId, academicTermId } = req?.params;
 
   const checkExisted = await Subject.findOne({ name });
   if (checkExisted)
@@ -116,16 +116,16 @@ exports.updateSubject = expressAsyncHandler(async (req, res, next) => {
  * @access Admin
  * */
 exports.deleteSubject = expressAsyncHandler(async (req, res, next) => {
-  const {programId, id} = req?.params;
+  const { programId, id } = req?.params;
   const subject = await Subject.findByIdAndDelete(id, {
     new: true,
   });
   await Program.findByIdAndUpdate(
-      programId,
-      {
-        $pull: { subjects: subject?._id },
-      },
-      { new: true }
+    programId,
+    {
+      $pull: { subjects: subject?._id },
+    },
+    { new: true }
   );
 
   if (!subject) return next(new ErrorHandler("Invalid id", 404));

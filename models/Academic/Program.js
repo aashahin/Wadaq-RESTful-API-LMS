@@ -15,20 +15,20 @@ const programSchema = new Schema(
       default: "4 Years",
       required: [true, "Please Enter Program Duration."],
     },
-      code: {
-          type: String,
-          default: function () {
-              return (
-                  this.name
-                      .split(" ")
-                      .map(name => name[0])
-                      .join("")
-                      .toUpperCase() +
-                  Math.floor(10 + Math.random() * 90) +
-                  Math.floor(10 + Math.random() * 90)
-              );
-          },
+    code: {
+      type: String,
+      default: function () {
+        return (
+          this.name
+            .split(" ")
+            .map((name) => name[0])
+            .join("")
+            .toUpperCase() +
+          Math.floor(10 + Math.random() * 90) +
+          Math.floor(10 + Math.random() * 90)
+        );
       },
+    },
     createdBy: {
       type: Schema.Types.ObjectId,
       ref: "Admin",
