@@ -9,6 +9,7 @@ const classLevelRoutes = require("./academics/classLevelRoute");
 const programRoutes = require("./academics/programRoute");
 const subjectRoutes = require("./academics/subjectRoute");
 const yearGroupRoutes = require("./academics/yearGroupRoute");
+const examRoutes = require("./academics/examRoute");
 
 const path = "/api/v1";
 
@@ -24,4 +25,5 @@ exports.routes = (app) => {
   app.use(`${path}/academic/program`, programRoutes);
   app.use(`${path}/academic/subject`, subjectRoutes);
   app.use(`${path}/academic/year-group`, yearGroupRoutes);
+  app.use(`${path}/academic/exam`, examRoutes);
 };

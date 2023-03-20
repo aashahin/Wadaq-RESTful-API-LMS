@@ -3,7 +3,6 @@ const express = require("express");
 const router = express.Router();
 
 // Internal
-const model = require("../../models/Staff/Admin");
 const Auth = require("../../middlewares/Auth/Auth");
 const { permissions } = require("../../middlewares/Auth/permissions");
 const {
@@ -17,15 +16,15 @@ const {
 // Routes
 router.post(
   "/:academicYearId",
-  Auth(model),
+  Auth(),
   permissions(["admin"]),
   createYearGroup
 );
-router.get("/", Auth(model), permissions(["admin"]), getAllYearGroups);
+router.get("/", Auth(), permissions(["admin"]), getAllYearGroups);
 router
   .route("/:id")
-  .get(Auth(model), permissions(["admin"]), getYearGroup)
-  .patch(Auth(model), permissions(["admin"]), updateYearGroup)
-  .delete(Auth(model), permissions(["admin"]), deleteYearGroup);
+  .get(Auth(), permissions(["admin"]), getYearGroup)
+  .patch(Auth(), permissions(["admin"]), updateYearGroup)
+  .delete(Auth(), permissions(["admin"]), deleteYearGroup);
 
 module.exports = router;

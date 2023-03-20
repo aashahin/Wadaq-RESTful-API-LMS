@@ -70,11 +70,11 @@ const teacherSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "Admin",
     },
-      accountVerificationCode: String,
-      accountVerificationCodeExpire: Date,
-      passwordChangedAt: Date,
-      passwordResetCode: String,
-      passwordResetExpire: Date,
+    accountVerificationCode: String,
+    accountVerificationCodeExpire: Date,
+    passwordChangedAt: Date,
+    passwordResetCode: String,
+    passwordResetExpire: Date,
   },
   { timestamps: true }
 );

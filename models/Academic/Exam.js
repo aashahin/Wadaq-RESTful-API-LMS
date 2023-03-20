@@ -10,16 +10,6 @@ const examSchema = new Schema(
       type: String,
       required: [true, "Please Enter Your Exam Description."],
     },
-    examId: {
-      type: String,
-      default: () => {
-        return (
-          "EX" +
-          this.name.split(" ").join("").toLowerCase() +
-          Math.floor(Math.random() * 1000)
-        );
-      },
-    },
     subject: {
       type: Schema.Types.ObjectId,
       ref: "Subject",
@@ -30,28 +20,7 @@ const examSchema = new Schema(
       ref: "Program",
       required: [true, "Please Enter Your Program."],
     },
-    classLevel: {
-      type: Schema.Types.ObjectId,
-      ref: "ClassLevel",
-      required: [true, "Please Enter Your Class Level."],
-    },
-    questions: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Question",
-        required: [true, "Please Enter Your Questions."],
-      },
-    ],
-    passMark: {
-      type: Number,
-      default: 50,
-      required: [true, "Please Enter Your Pass Mark."],
-    },
-    totalMark: {
-      type: Number,
-      default: 100,
-      required: [true, "Please Enter Your Total Mark."],
-    },
+
     academicYear: {
       type: Schema.Types.ObjectId,
       ref: "AcademicYear",
@@ -87,7 +56,16 @@ const examSchema = new Schema(
     examResult: {
       type: String,
       enum: ["pass", "fail"],
-      default: "pass",
+    },
+    passMark: {
+      type: Number,
+      default: 50,
+      required: [true, "Please Enter Your Pass Mark."],
+    },
+    totalMark: {
+      type: Number,
+      default: 100,
+      required: [true, "Please Enter Your Total Mark."],
     },
     createdBy: {
       type: Schema.Types.ObjectId,

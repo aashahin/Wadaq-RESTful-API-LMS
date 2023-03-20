@@ -7,7 +7,8 @@ const Admin = require("../../models/Staff/Admin");
 const ErrorHandler = require("../../middlewares/Errors/ErrorHandler");
 const {
   sanitizeUser,
-  sanitizeInfo, sanitizeProfile,
+  sanitizeInfo,
+  sanitizeProfile,
 } = require("../../utiles/sanitize");
 const { createToken } = require("../../middlewares/Auth/token");
 

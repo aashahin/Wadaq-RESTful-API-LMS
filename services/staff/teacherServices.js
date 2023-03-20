@@ -62,7 +62,7 @@ exports.loginTeacher = expressAsyncHandler(async (req, res, next) => {
  * @access Teacher
  * */
 exports.getAllTeachers = expressAsyncHandler(async (req, res, next) => {
-  const data = await Teacher.find().select(["-password", "-isAccountVerified"]);
+  const data = await Teacher.find().select("-password");
   res?.json(data);
 });
 // Get Profile Teacher
@@ -74,8 +74,8 @@ exports.getAllTeachers = expressAsyncHandler(async (req, res, next) => {
  * */
 exports.getProfileTeacher = expressAsyncHandler(async (req, res, next) => {
   const { id } = req?.user;
-  const user = await Teacher.findById(id);
-  res?.json(sanitizeInfo(user));
+  const user = await Teacher.findById(id).select("-password");
+  res?.json(user);
 });
 
 // Update Profile Teacher
@@ -104,23 +104,30 @@ exports.updateProfileTeacher = expressAsyncHandler(async (req, res) => {
  * @method PATCH
  * @access Admin
  * */
-exports.updateProfileTeacherByAdmin = expressAsyncHandler(async (req, res,next) => {
-  const { subject, classLevel, program, academicYear } = req?.body;
+exports.updateProfileTeacherByAdmin = expressAsyncHandler(
+  async (req, res, next) => {
+    const { subject, classLevel, program, academicYear } = req?.body;
     const { id } = req?.params;
     const data = await Teacher.findById(id);
-  // Check if email exists
-  if (!data) return next(new ErrorHandler("invalid id", 401));
+    // Check if email exists
+    if (!data) return next(new ErrorHandler("invalid id", 401));
 
-  // Check if teacher is withdrawn
-  if (data?.isWithdrawn) return next(new ErrorHandler("Action denied, teacher is withdraw", 401));
+    // Check if teacher is withdrawn
+    if (data?.isWithdrawn)
+      return next(new ErrorHandler("Action denied, teacher is withdraw", 401));
 
-  // update
-  const teacher = await Teacher.findByIdAndUpdate(data?._id,{
-    program: program || data?.program,
-    subject: subject || data?.subject,
-    academicYear: academicYear || data?.academicYear,
-    classLevel: classLevel || data?.classLevel,
-  },{new: true});
+    // update
+    const teacher = await Teacher.findByIdAndUpdate(
+      data?._id,
+      {
+        program: program || data?.program,
+        subject: subject || data?.subject,
+        academicYear: academicYear || data?.academicYear,
+        classLevel: classLevel || data?.classLevel,
+      },
+      { new: true }
+    );
 
     res?.json(teacher);
-});
+  }
+);

@@ -1,8 +1,10 @@
 const expressAsyncHandler = require("express-async-handler");
 const ErrorHandler = require("../Errors/ErrorHandler");
 const jwt = require("jsonwebtoken");
+const Teacher = require("../../models/Staff/Teacher");
+const Admin = require("../../models/Staff/Admin");
 
-function Auth(Model) {
+function Auth() {
   return expressAsyncHandler(async (req, res, next) => {
     let token;
     if (
@@ -13,9 +15,12 @@ function Auth(Model) {
     }
     if (!token) return next(new ErrorHandler("Access Denied.", 401));
     const decoded = jwt.verify(token, process.env.SECRET_KEY);
-
+    console.log(decoded.id)
     // Date Changed Password
-    const user = await Model.findById(decoded.id).select("-password");
+
+    const admin = await Admin.findById(decoded.id).select("-password");
+    const teacher = await Teacher.findById(decoded.id).select("-password");
+    const user = admin || teacher;
     if (user.passwordChangedAt) {
       const passChangeTimeStamp = Math.round(user.passwordChangedAt / 1000);
       if (passChangeTimeStamp > decoded.iat) {
