@@ -7,8 +7,7 @@ const Admin = require("../../models/Staff/Admin");
 const ErrorHandler = require("../../middlewares/Errors/ErrorHandler");
 const {
   sanitizeUser,
-  sanitizeAdmins,
-  sanitizeProfileAdmin,
+  sanitizeInfo, sanitizeProfile,
 } = require("../../utiles/sanitize");
 const { createToken } = require("../../middlewares/Auth/token");
 
@@ -73,8 +72,8 @@ exports.getAllAdmins = expressAsyncHandler(async (req, res, next) => {
  * */
 exports.getProfileAdmin = expressAsyncHandler(async (req, res, next) => {
   const { id } = req?.user;
-  const user = await Admin.findById(id).populate("academicYears");
-  res?.json(sanitizeAdmins(user));
+  const user = await Admin.findById(id);
+  res?.json(sanitizeInfo(user));
 });
 
 // Update Profile Admin
@@ -90,8 +89,8 @@ exports.updateProfileAdmin = expressAsyncHandler(async (req, res, next) => {
   const data = await Admin.findById(id);
   const user = await Admin.findByIdAndUpdate(
     id,
-    sanitizeProfileAdmin(data, name, email, avatar),
+    sanitizeProfile(data, name, email, avatar),
     { new: true, runValidators: true }
   );
-  res?.json(sanitizeAdmins(user));
+  res?.json(sanitizeInfo(user));
 });

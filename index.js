@@ -3,7 +3,7 @@ require("dotenv").config();
 const express = require("express"),
   app = express(),
   server = require("http").createServer(app);
-morgan = require("morgan");
+const morgan = require("morgan");
 
 // Internal
 require("./config/db");

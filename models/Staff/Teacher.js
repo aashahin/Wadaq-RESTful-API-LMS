@@ -1,4 +1,5 @@
 const { Schema, model } = require("mongoose");
+const bcrypt = require("bcryptjs");
 
 const teacherSchema = new Schema(
   {
@@ -8,7 +9,7 @@ const teacherSchema = new Schema(
     },
     teacherId: {
       type: String,
-      default: () => {
+      default: function () {
         return (
           "TE" +
           this.name.split(" ").join("").toLowerCase() +
@@ -29,6 +30,10 @@ const teacherSchema = new Schema(
       type: String,
       required: [true, "Please Enter Your Password."],
     },
+    isAccountVerified: {
+      type: Boolean,
+      default: false,
+    },
     role: {
       type: String,
       default: "teacher",
@@ -37,31 +42,11 @@ const teacherSchema = new Schema(
       type: Date,
       default: Date.now(),
     },
-    subject: {
-      type: Schema.Types.ObjectId,
-      ref: "Subject",
-      required: [true, "Please Enter Your Subject."],
-    },
-    classLevel: {
-      type: Schema.Types.ObjectId,
-      ref: "ClassLevel",
-      required: [true, "Please Enter Your Class Level."],
-    },
-    program: {
-      type: Schema.Types.ObjectId,
-      ref: "Program",
-      required: [true, "Please Enter Your Program."],
-    },
-    academicYear: {
-      type: Schema.Types.ObjectId,
-      ref: "AcademicYear",
-      required: [true, "Please Enter Your Academic Year."],
-    },
-    academicTerm: {
-      type: Schema.Types.ObjectId,
-      ref: "AcademicTerm",
-      required: [true, "Please Enter Your Academic Term."],
-    },
+    subject: String,
+    classLevel: String,
+    program: String,
+    academicYear: String,
+    academicTerm: String,
     exams: [
       {
         type: Schema.Types.ObjectId,
@@ -84,10 +69,21 @@ const teacherSchema = new Schema(
     createdBy: {
       type: Schema.Types.ObjectId,
       ref: "Admin",
-      required: [true, "Please Enter Your Admin."],
     },
+      accountVerificationCode: String,
+      accountVerificationCodeExpire: Date,
+      passwordChangedAt: Date,
+      passwordResetCode: String,
+      passwordResetExpire: Date,
   },
   { timestamps: true }
 );
+
+teacherSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+  const salt = await bcrypt.genSalt(12);
+  this.password = await bcrypt.hash(this.password, salt);
+  next();
+});
 
 module.exports = model("Teacher", teacherSchema);

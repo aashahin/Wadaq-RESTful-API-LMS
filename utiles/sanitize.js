@@ -6,7 +6,7 @@ exports.sanitizeUser = (user) => {
     avatar: user.avatar,
   };
 };
-exports.sanitizeAdmins = (admin) => {
+exports.sanitizeInfo = (admin) => {
   return {
     id: admin._id,
     name: admin.name,
@@ -22,7 +22,7 @@ exports.sanitizeAdmins = (admin) => {
     students: admin.students,
   };
 };
-exports.sanitizeProfileAdmin = (data, name, email, avatar) => {
+exports.sanitizeProfile = (data, name, email, avatar) => {
   return {
     name: name || data.name,
     email: email || data.email,
