@@ -17,11 +17,11 @@ const {
 router
   .route("/")
   .post(Auth(), permissions(["admin"]), createClassLevel)
-  .get(Auth(), permissions(["admin"]), getAllClassLevels);
+  .get(Auth(), permissions(["admin", "teacher"]), getAllClassLevels);
 
 router
   .route("/:id")
-  .get(Auth(), permissions(["admin"]), getClassLevel)
+  .get(Auth(), permissions(["admin", "teacher"]), getClassLevel)
   .patch(Auth(), permissions(["admin"]), updateClassLevel)
   .delete(Auth(), permissions(["admin"]), deleteClassLevel);
 

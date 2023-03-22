@@ -15,9 +15,8 @@ function Auth() {
     }
     if (!token) return next(new ErrorHandler("Access Denied.", 401));
     const decoded = jwt.verify(token, process.env.SECRET_KEY);
-    console.log(decoded.id)
-    // Date Changed Password
 
+    // Date Changed Password
     const admin = await Admin.findById(decoded.id).select("-password");
     const teacher = await Teacher.findById(decoded.id).select("-password");
     const user = admin || teacher;

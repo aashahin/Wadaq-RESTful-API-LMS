@@ -21,9 +21,7 @@ router.route("/login").post(loginAdmin);
 // Get All
 router.route("/").get(Auth(), permissions(["admin"]), getAllAdmins);
 // Get Profile
-router
-  .route("/profile")
-  .get(Auth(), permissions(["admin"]), getProfileAdmin);
+router.route("/profile").get(Auth(), permissions(["admin"]), getProfileAdmin);
 // Update
 router
   .route("/profile")

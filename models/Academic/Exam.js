@@ -31,6 +31,11 @@ const examSchema = new Schema(
       ref: "AcademicTerm",
       required: [true, "Please Enter Your Academic Term."],
     },
+    classLevel: {
+      type: Schema.Types.ObjectId,
+      ref: "AcademicTerm",
+      required: [true, "Please Enter Your Academic Term."],
+    },
     duration: {
       type: Number,
       default: 60,
@@ -67,6 +72,7 @@ const examSchema = new Schema(
       default: 100,
       required: [true, "Please Enter Your Total Mark."],
     },
+    questions: [String],
     createdBy: {
       type: Schema.Types.ObjectId,
       ref: "Teacher",

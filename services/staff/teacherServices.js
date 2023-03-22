@@ -43,7 +43,6 @@ exports.signupTeacher = expressAsyncHandler(async (req, res, next) => {
 exports.loginTeacher = expressAsyncHandler(async (req, res, next) => {
   const { email, password } = req?.body;
   const teacher = await Teacher.findOne({ email });
-  console.log(teacher);
   if (teacher && (await bcrypt.compare(password, teacher?.password))) {
     res?.json({
       info: sanitizeUser(teacher),

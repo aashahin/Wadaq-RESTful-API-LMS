@@ -22,6 +22,6 @@ router
 router
   .route("/:id")
   .get(Auth(), permissions(["admin"]), getProgram)
-  .patch(Auth(), permissions(["admin"]), updateProgram)
+  .patch(Auth(), permissions(["admin"]), updateProgram);
 
 module.exports = router;
