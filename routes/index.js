@@ -1,29 +1,31 @@
 // Staff
-const adminRoutes = require("./staff/adminRoute");
-const teacherRoutes = require("./staff/teacherRoute");
+const admin = require("./staff/adminRoute");
+const teacher = require("./staff/teacherRoute");
 
 // Academics
-const academicYearRoutes = require("./academics/academicYearRoute");
-const academicTermRoutes = require("./academics/academicTermRoute");
-const classLevelRoutes = require("./academics/classLevelRoute");
-const programRoutes = require("./academics/programRoute");
-const subjectRoutes = require("./academics/subjectRoute");
-const yearGroupRoutes = require("./academics/yearGroupRoute");
-const examRoutes = require("./academics/examRoute");
+const academicYear = require("./academics/academicYearRoute");
+const academicTerm = require("./academics/academicTermRoute");
+const classLevel = require("./academics/classLevelRoute");
+const program = require("./academics/programRoute");
+const subject = require("./academics/subjectRoute");
+const yearGroup = require("./academics/yearGroupRoute");
+const exam = require("./academics/examRoute");
+const student = require("./academics/studentRoute");
 
 const path = "/api/v1";
 
 exports.routes = (app) => {
   // Staff
-  app.use(`${path}/staff/admin`, adminRoutes);
-  app.use(`${path}/staff/teacher`, teacherRoutes);
+  app.use(`${path}/staff/admin`, admin);
+  app.use(`${path}/staff/teacher`, teacher);
 
   // Academics
-  app.use(`${path}/academic/academic-year`, academicYearRoutes);
-  app.use(`${path}/academic/academic-term`, academicTermRoutes);
-  app.use(`${path}/academic/class-level`, classLevelRoutes);
-  app.use(`${path}/academic/program`, programRoutes);
-  app.use(`${path}/academic/subject`, subjectRoutes);
-  app.use(`${path}/academic/year-group`, yearGroupRoutes);
-  app.use(`${path}/academic/exam`, examRoutes);
+  app.use(`${path}/academic/academic-year`, academicYear);
+  app.use(`${path}/academic/academic-term`, academicTerm);
+  app.use(`${path}/academic/class-level`, classLevel);
+  app.use(`${path}/academic/program`, program);
+  app.use(`${path}/academic/subject`, subject);
+  app.use(`${path}/academic/year-group`, yearGroup);
+  app.use(`${path}/academic/exam`, exam);
+  app.use(`${path}/academic/student`, student);
 };

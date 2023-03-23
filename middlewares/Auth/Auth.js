@@ -2,6 +2,7 @@ const expressAsyncHandler = require("express-async-handler");
 const ErrorHandler = require("../Errors/ErrorHandler");
 const jwt = require("jsonwebtoken");
 const Teacher = require("../../models/Staff/Teacher");
+const Student = require("../../models/Academic/Student");
 const Admin = require("../../models/Staff/Admin");
 
 function Auth() {
@@ -19,7 +20,8 @@ function Auth() {
     // Date Changed Password
     const admin = await Admin.findById(decoded.id).select("-password");
     const teacher = await Teacher.findById(decoded.id).select("-password");
-    const user = admin || teacher;
+    const student = await Student.findById(decoded.id).select("-password");
+    const user = admin || teacher || student;
     if (user.passwordChangedAt) {
       const passChangeTimeStamp = Math.round(user.passwordChangedAt / 1000);
       if (passChangeTimeStamp > decoded.iat) {
