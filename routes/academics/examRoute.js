@@ -21,6 +21,5 @@ router
   .route("/:id")
   .get(Auth(), getExam)
   .patch(Auth(), permissions(["teacher"]), updateExam);
-//   .delete(Auth(model), permissions(["admin"]), deleteYearGroup);
 
 module.exports = router;

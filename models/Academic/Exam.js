@@ -72,7 +72,12 @@ const examSchema = new Schema(
       default: 100,
       required: [true, "Please Enter Your Total Mark."],
     },
-    questions: [String],
+    questions: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Question",
+      },
+    ],
     createdBy: {
       type: Schema.Types.ObjectId,
       ref: "Teacher",

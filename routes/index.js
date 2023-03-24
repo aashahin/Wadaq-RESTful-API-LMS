@@ -11,6 +11,7 @@ const subject = require("./academics/subjectRoute");
 const yearGroup = require("./academics/yearGroupRoute");
 const exam = require("./academics/examRoute");
 const student = require("./academics/studentRoute");
+const question = require("./academics/questionRoute");
 
 const path = "/api/v1";
 
@@ -28,4 +29,5 @@ exports.routes = (app) => {
   app.use(`${path}/academic/year-group`, yearGroup);
   app.use(`${path}/academic/exam`, exam);
   app.use(`${path}/academic/student`, student);
+  app.use(`${path}/questions`, question);
 };

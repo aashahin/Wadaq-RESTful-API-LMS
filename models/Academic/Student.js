@@ -9,7 +9,7 @@ const studentSchema = new Schema(
     },
     studentId: {
       type: String,
-      default: function (){
+      default: function () {
         return (
           "ST" +
           this.name.split(" ").join("").toLowerCase() +
@@ -57,7 +57,7 @@ const studentSchema = new Schema(
     ],
     currentClassLevel: {
       type: Schema.Types.ObjectId,
-      default: function(){
+      default: function () {
         return this.classLevels[this.classLevels.length - 1];
       },
     },
@@ -70,7 +70,7 @@ const studentSchema = new Schema(
     ],
     currentProgram: {
       type: Schema.Types.ObjectId,
-      default: function (){
+      default: function () {
         return this.programs[this.programs.length - 1];
       },
     },
@@ -117,10 +117,10 @@ const studentSchema = new Schema(
   { timestamps: true }
 );
 
-studentSchema.pre("save", function(next){
-    if(!this.isModified("password")) return next();
-    const salt = bcrypt.genSaltSync(10);
-    this.password = bcrypt.hashSync(this.password, salt);
-    next();
-})
+studentSchema.pre("save", function (next) {
+  if (!this.isModified("password")) return next();
+  const salt = bcrypt.genSaltSync(10);
+  this.password = bcrypt.hashSync(this.password, salt);
+  next();
+});
 module.exports = model("Student", studentSchema);

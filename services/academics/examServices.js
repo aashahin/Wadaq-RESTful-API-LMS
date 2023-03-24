@@ -73,7 +73,9 @@ exports.getAllExams = expressAsyncHandler(async (req, res, next) => {
  * @access Auth
  */
 exports.getExam = expressAsyncHandler(async (req, res, next) => {
-  const exam = await Exam.findById(req?.params?.id);
+  const exam = await Exam.findById(req?.params?.id).populate({
+    path: "questions",
+  });
   if (!exam) {
     return next(new ErrorHandler("Exam not found", 404));
   }

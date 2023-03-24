@@ -16,7 +16,7 @@ const { permissions } = require("../../middlewares/Auth/permissions");
 
 // Routes
 // SignUp
-router.route("/signup").post(Auth(),permissions(["admin"]),signupStudent);
+router.route("/signup").post(Auth(), permissions(["admin"]), signupStudent);
 // Login
 router.route("/login").post(loginStudent);
 // Get All
@@ -24,7 +24,7 @@ router.route("/").get(Auth(), getAllStudents);
 // Get Profile
 router
   .route("/profile")
-  .get(Auth(),permissions(["student"]), getProfileStudent);
+  .get(Auth(), permissions(["student"]), getProfileStudent);
 // Update
 router
   .route("/profile")
