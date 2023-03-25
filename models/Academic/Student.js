@@ -49,12 +49,7 @@ const studentSchema = new Schema(
       type: Boolean,
       default: false,
     },
-    classLevels: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "ClassLevel",
-      },
-    ],
+    classLevels: [String],
     currentClassLevel: {
       type: Schema.Types.ObjectId,
       default: function () {
@@ -107,12 +102,7 @@ const studentSchema = new Schema(
       type: Boolean,
       default: false,
     },
-    achievements: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Achievement",
-      },
-    ],
+    achievements: [String],
   },
   { timestamps: true }
 );

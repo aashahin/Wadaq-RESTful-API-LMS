@@ -16,10 +16,6 @@ const examResultSchema = new Schema(
       type: Number,
       required: [true, "Please Enter Your Score."],
     },
-    passMark: {
-      type: Number,
-      required: [true, "Please Enter Your Pass Mark."],
-    },
     status: {
       type: String,
       enum: ["Pass", "Fail"],
@@ -28,14 +24,6 @@ const examResultSchema = new Schema(
     remarks: {
       type: String,
       required: [true, "Please Enter Your Remarks."],
-    },
-    position: {
-      type: Number,
-      required: [true, "Please Enter Your Position."],
-    },
-    subject: {
-      type: Schema.Types.ObjectId,
-      ref: "Subject",
     },
     classLevel: {
       type: Schema.Types.ObjectId,
@@ -54,11 +42,6 @@ const examResultSchema = new Schema(
     isPublished: {
       type: Boolean,
       default: false,
-    },
-    createdBy: {
-      type: Schema.Types.ObjectId,
-      ref: "Teacher",
-      required: [true, "Please Enter Your Teacher."],
     },
   },
   { timestamps: true }
