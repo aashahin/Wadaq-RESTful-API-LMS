@@ -9,7 +9,7 @@ const {
   updateProfileStudent,
   getProfileStudent,
   getAllStudents,
-  updateProfileStudentByAdmin,
+  updateProfileStudentByAdmin, takeExam,
 } = require("../../services/academics/studentServices");
 const Auth = require("../../middlewares/Auth/Auth");
 const { permissions } = require("../../middlewares/Auth/permissions");
@@ -38,4 +38,6 @@ router.patch(
   updateProfileStudentByAdmin
 );
 
+// Exam
+router.post("/exam/:examId", Auth(), permissions(["student"]), takeExam);
 module.exports = router;

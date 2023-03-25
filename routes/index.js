@@ -28,6 +28,6 @@ exports.routes = (app) => {
   app.use(`${path}/academic/subject`, subject);
   app.use(`${path}/academic/year-group`, yearGroup);
   app.use(`${path}/academic/exam`, exam);
-  app.use(`${path}/academic/student`, student);
+  app.use(`${path}/student`, student);
   app.use(`${path}/questions`, question);
 };

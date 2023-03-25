@@ -11,6 +11,7 @@ const {
   sanitizeProfile,
 } = require("../../utiles/sanitize");
 const { createToken } = require("../../middlewares/Auth/token");
+const Exam = require("../../models/Academic/Exam");
 
 // Signup
 /*
@@ -126,3 +127,43 @@ exports.updateProfileStudentByAdmin = expressAsyncHandler(
     res?.json(student);
   }
 );
+
+// Take Exam By Student
+/*
+ * @desc  Take Exam By Student
+ * @route /api/v1/student/exam/:examId
+ * @method POST
+ * @access Auth
+ */
+exports.takeExam = expressAsyncHandler(async (req, res, next) => {
+    const { examId } = req?.params;
+    const exam = await Exam.findById(examId).populate("questions");
+    if (!exam) {
+        return next(new ErrorHandler("Invalid id exam", 404));
+    }
+    const questions = exam?.questions;
+    const { answers } = req?.body;
+    let correctAnswers = 0;
+    let wrongAnswers = 0;
+    let score = 0;
+    let grade = 0;
+    let totalQuestions = 0;
+    let answeredQuestions = [];
+
+    if(questions.length === answers.length) {
+        for (let i = 0; i < questions?.length; i++) {
+            const question = questions[i];
+            if (question.answer === answers[i]) {
+                correctAnswers++;
+                score++;
+                question.isCorrect = true;
+            } else {
+                wrongAnswers++;
+                question.isCorrect = false;
+            }
+        }
+    }else{
+        return next(new ErrorHandler("You must answer all questions", 401));
+    }
+    res?.json({correctAnswers, wrongAnswers, score,questions})
+});
