@@ -132,13 +132,12 @@ exports.updateExam = expressAsyncHandler(async (req, res, next) => {
   res?.json(exam);
 });
 
-
 // Exam Result
 /*
-    * @desc Exam Result
-    * @route /api/v1/exam/:id/result
-    * @method GET
-    * @access Student
+ * @desc Exam Result
+ * @route /api/v1/exam/:id/result
+ * @method GET
+ * @access Student
  */
 exports.getExamResult = expressAsyncHandler(async (req, res, next) => {
   const { examId } = req?.params;
@@ -153,7 +152,7 @@ exports.getExamResult = expressAsyncHandler(async (req, res, next) => {
   }
 
   // check if exam result is published
-  if(!examResult?.isPublished) {
+  if (!examResult?.isPublished) {
     return next(new ErrorHandler("Exam result not published", 404));
   }
   res?.json(examResult);
@@ -161,42 +160,42 @@ exports.getExamResult = expressAsyncHandler(async (req, res, next) => {
 
 // Exams Results for a student
 /*
-    * @desc Exam Results for a student
-    * @route /api/v1/exam/results
-    * @method GET
-    * @access Student
+ * @desc Exam Results for a student
+ * @route /api/v1/exam/results
+ * @method GET
+ * @access Student
  */
 exports.getExamsResultsStudent = expressAsyncHandler(async (req, res, next) => {
-  console.log(req?.user?.id)
+  console.log(req?.user?.id);
   const examResults = await ExamResult.find({ student: req?.user?.id });
   res?.json(examResults);
-})
+});
 
 // Exams Results for All students
 /*
-    * @desc Exam Results for All students
-    * @route /api/v1/exam/results/all
-    * @method GET
-    * @access Teacher
+ * @desc Exam Results for All students
+ * @route /api/v1/exam/results/all
+ * @method GET
+ * @access Teacher
  */
 exports.getExamsResultsAll = expressAsyncHandler(async (req, res, next) => {
   const examResults = await ExamResult.find();
   res?.json(examResults);
-})
+});
 
 // Publish Exam Result
 /*
-    * @desc Publish Exam Result
-    * @route /api/v1/exam/:id/result/publish
-    * @method PATCH
-    * @access Teacher
+ * @desc Publish Exam Result
+ * @route /api/v1/exam/:id/result/publish
+ * @method PATCH
+ * @access Teacher
  */
 exports.publishExamResult = expressAsyncHandler(async (req, res, next) => {
-    const { examId } = req?.params;
-    const examResult = await ExamResult.findOneAndUpdate(
-        { exam: examId },
-        { isPublished: true },
-        { new: true }
-    );
-    res?.json(examResult);
+  const { examId } = req?.params;
+  const examResult = await ExamResult.findOneAndUpdate(
+    { exam: examId },
+    { isPublished: true },
+    { new: true }
+  );
+  res?.json(examResult);
 });

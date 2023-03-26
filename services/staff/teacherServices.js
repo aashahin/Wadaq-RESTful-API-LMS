@@ -11,6 +11,7 @@ const {
   sanitizeProfile,
 } = require("../../utiles/sanitize");
 const { createToken } = require("../../middlewares/Auth/token");
+const ApiFeatures = require("../../utiles/ApiFeatures");
 
 // Signup
 /*
@@ -58,11 +59,17 @@ exports.loginTeacher = expressAsyncHandler(async (req, res, next) => {
  * @desc Get All Teachers
  * @route /api/v1/staff/teacher/
  * @method GET
- * @access Teacher
+ * @access Admin
  * */
 exports.getAllTeachers = expressAsyncHandler(async (req, res, next) => {
-  const data = await Teacher.find().select("-password");
-  res?.json(data);
+  const model = Teacher.find();
+  const count = await Teacher.countDocuments();
+    const data = await new ApiFeatures(model, req?.query)
+        .search()
+        .paginate(count)
+
+    const { pagination } = data;
+  res?.json({ pagination, data: data.query });
 });
 // Get Profile Teacher
 /*

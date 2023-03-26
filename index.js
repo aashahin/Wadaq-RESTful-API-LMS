@@ -1,8 +1,7 @@
 // External
 require("dotenv").config();
 const express = require("express"),
-  app = express(),
-  server = require("http").createServer(app);
+  app = express();
 const morgan = require("morgan");
 
 // Internal
@@ -26,7 +25,7 @@ app.all("*", (req, res, next) => {
 app.use(globalErrors);
 // Setup Server
 const PORT = process.env.PORT || 4000;
-const onServer = server.listen(PORT, () => {
+const onServer = app.listen(PORT, () => {
   console.log(`Running Server With ${PORT}`);
 });
 

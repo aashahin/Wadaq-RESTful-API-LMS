@@ -20,7 +20,7 @@ router.route("/signup").post(signupTeacher);
 // Login
 router.route("/login").post(loginTeacher);
 // Get All
-router.route("/").get(Auth(), permissions(["teacher"]), getAllTeachers);
+router.route("/").get(Auth(), permissions(["admin"]), getAllTeachers);
 // Get Profile
 router
   .route("/profile")
@@ -37,14 +37,5 @@ router.patch(
   permissions(["admin"]),
   updateProfileTeacherByAdmin
 );
-
-// Delete
-// router.route("/:id").delete();
-// router.route("/suspend/teacher/:id").patch();
-// router.route("/unsuspend/teacher/:id").patch();
-// router.route("/withdraw/teacher/:id").patch();
-// router.route("/unwithdraw/teacher/:id").patch();
-// router.route("/publish/exam/:id").patch();
-// router.route("/unpublished/exam/:id").patch();
 
 module.exports = router;

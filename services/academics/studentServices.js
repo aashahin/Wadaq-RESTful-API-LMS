@@ -264,6 +264,6 @@ exports.takeExam = expressAsyncHandler(async (req, res, next) => {
     );
   }
   res?.json({
-      message: "Exam taken successfully, please check your result",
+    message: "Exam taken successfully, please check your result",
   });
 });
