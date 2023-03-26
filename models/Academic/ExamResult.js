@@ -16,6 +16,10 @@ const examResultSchema = new Schema(
       type: Number,
       required: [true, "Please Enter Your Score."],
     },
+    grade: {
+      type: Number,
+      required: [true, "Please Enter Your Grade."],
+    },
     answeredQuestions: [Object],
     status: {
       type: String,
@@ -25,10 +29,6 @@ const examResultSchema = new Schema(
     remarks: {
       type: String,
       required: [true, "Please Enter Your Remarks."],
-    },
-    classLevel: {
-      type: Schema.Types.ObjectId,
-      ref: "ClassLevel",
     },
     academicYear: {
       type: Schema.Types.ObjectId,

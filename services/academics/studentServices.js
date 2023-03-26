@@ -146,10 +146,12 @@ exports.updateProfileStudentByAdmin = expressAsyncHandler(
  * @desc  Take Exam By Student
  * @route /api/v1/student/exam/:examId
  * @method POST
- * @access Auth
+ * @access Student
  */
 exports.takeExam = expressAsyncHandler(async (req, res, next) => {
   const { examId } = req?.params;
+
+  // check if exam exists
   const exam = await Exam.findById(examId).populate("questions");
   if (!exam) {
     return next(new ErrorHandler("Invalid id exam", 404));
@@ -225,7 +227,6 @@ exports.takeExam = expressAsyncHandler(async (req, res, next) => {
     grade,
     status,
     remarks,
-    classLevel: exam?.classLevel,
     academicYear: exam?.academicYear,
     academicTerm: exam?.academicTerm,
   });
