@@ -38,20 +38,16 @@ const studentSchema = new Schema(
       type: Date,
       default: Date.now(),
     },
-    dataGraduated: {
-      type: String,
-    },
-    isGraduated: {
-      type: Boolean,
-      default: false,
-    },
     isWithdrawn: {
       type: Boolean,
       default: false,
     },
-    classLevels: [String],
+    classLevels: [{
+        type: String,
+        default: "Level 0"
+    }],
     currentClassLevel: {
-      type: Schema.Types.ObjectId,
+      type: String,
       default: function () {
         return this.classLevels[this.classLevels.length - 1];
       },
@@ -82,22 +78,6 @@ const studentSchema = new Schema(
         ref: "ExamResult",
       },
     ],
-    isPromotedOne: {
-      type: Boolean,
-      default: false,
-    },
-    isPromotedTwo: {
-      type: Boolean,
-      default: false,
-    },
-    isPromotedThree: {
-      type: Boolean,
-      default: false,
-    },
-    isPromotedFour: {
-      type: Boolean,
-      default: false,
-    },
     isSuspended: {
       type: Boolean,
       default: false,

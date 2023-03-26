@@ -33,7 +33,7 @@ const examSchema = new Schema(
     },
     classLevel: {
       type: Schema.Types.ObjectId,
-      ref: "AcademicTerm",
+      ref: "ClassLevel",
       required: [true, "Please Enter Your Academic Term."],
     },
     duration: {

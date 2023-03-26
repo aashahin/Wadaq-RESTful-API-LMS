@@ -145,9 +145,9 @@ exports.takeExam = expressAsyncHandler(async (req, res, next) => {
 
     // check if student has already taken this exam
     const checkExam = await ExamResult.findOne({ student: req?.user?.id, exam: examId });
-    if (checkExam) {
-        return next(new ErrorHandler("You have already taken this exam", 401));
-    }
+    // if (checkExam) {
+    //     return next(new ErrorHandler("You have already taken this exam", 401));
+    // }
 
     const questions = exam?.questions;
     const { answers } = req?.body;
@@ -197,19 +197,42 @@ exports.takeExam = expressAsyncHandler(async (req, res, next) => {
     }else{
         remarks = "Fail";
     }
-    const examResult = await ExamResult.create({
-        student: req?.user?.id,
-        exam,
-        score,
-        grade,
-        status,
-        remarks,
-        classLevel: exam?.classLevel,
-        academicYear: exam?.academicYear,
-        academicTerm: exam?.academicTerm,
-    });
-    await Student.findByIdAndUpdate(req?.user?.id, {
-        $addToSet: { examResults: examResult?._id },
-    },{new: true});
-    res?.json({totalQuestions,status,correctAnswers, wrongAnswers, score, grade,remarks, answeredQuestions})
+    // const examResult = await ExamResult.create({
+    //     student: req?.user?.id,
+    //     exam,
+    //     score,
+    //     grade,
+    //     status,
+    //     remarks,
+    //     classLevel: exam?.classLevel,
+    //     academicYear: exam?.academicYear,
+    //     academicTerm: exam?.academicTerm,
+    // });
+    // await Student.findByIdAndUpdate(req?.user?.id, {
+    //     $addToSet: { examResults: examResult?._id },
+    // },{new: true});
+
+    // Promotion
+    let { currentClassLevel } = req?.user;
+    let level;
+    if(status === "Pass"){
+        let split = currentClassLevel?.split(" ");
+        let newClassLevel;
+        if(split[1] === "0"){
+            newClassLevel = `${split[0]} 1`;
+        }else if(split[1] === "1"){
+            newClassLevel = `${split[0]} 2`;
+        }else if(split[1] === "2"){
+            newClassLevel = `${split[0]} 3`;
+        }else if(split[1] === "3"){
+            newClassLevel = `${split[0]} 4`;
+        }else if (split[1] === "4") {
+            newClassLevel = `${split[0]} 5`;
+        }else if (split[1] === "5") {
+            newClassLevel = split.join(" ");
+        }
+        split = newClassLevel;
+        level = await Student.findByIdAndUpdate(req?.user?.id, {$addToSet: {classLevels: split}},{new: true});
+    }
+    res?.json({totalQuestions,status,correctAnswers, wrongAnswers, score, grade,remarks,level: level.currentClassLevel, answeredQuestions})
 });
