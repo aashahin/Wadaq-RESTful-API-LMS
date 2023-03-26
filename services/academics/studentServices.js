@@ -46,6 +46,8 @@ exports.loginStudent = expressAsyncHandler(async (req, res, next) => {
   const { email, password } = req?.body;
   const student = await Student.findOne({ email });
   if (student && (await bcrypt.compare(password, student?.password))) {
+    if (student?.isWithdrawn)
+      return next(new ErrorHandler("You are withdrawn from the school.", 401));
     res?.json({
       info: sanitizeUser(student),
       token: createToken(student?._id),
@@ -62,7 +64,7 @@ exports.loginStudent = expressAsyncHandler(async (req, res, next) => {
  * @method GET
  * @access Student
  * */
-exports.getAllStudents = expressAsyncHandler(async (req, res, next) => {
+exports.getAllStudents = expressAsyncHandler(async (req, res) => {
   const data = await Student.find().select("-password");
   res?.json(data);
 });
@@ -73,7 +75,7 @@ exports.getAllStudents = expressAsyncHandler(async (req, res, next) => {
  * @method GET
  * @access Student
  * */
-exports.getProfileStudent = expressAsyncHandler(async (req, res, next) => {
+exports.getProfileStudent = expressAsyncHandler(async (req, res) => {
   const { id } = req?.user;
   const user = await Student.findById(id).select("-password");
   res?.json(user);
@@ -107,8 +109,16 @@ exports.updateProfileStudent = expressAsyncHandler(async (req, res) => {
  * */
 exports.updateProfileStudentByAdmin = expressAsyncHandler(
   async (req, res, next) => {
-    const { name, email, classLevels, programs, academicYears, achievements } =
-      req?.body;
+    const {
+      name,
+      email,
+      classLevels,
+      programs,
+      academicYears,
+      achievements,
+      isWithdrawn,
+      isSuspended,
+    } = req?.body;
     const { id } = req?.params;
     const data = await Student.findById(id);
     // Check if email exists
@@ -120,6 +130,8 @@ exports.updateProfileStudentByAdmin = expressAsyncHandler(
       {
         name,
         email,
+        isWithdrawn,
+        isSuspended,
         $addToSet: { classLevels, programs, academicYears, achievements },
       },
       { new: true }
@@ -137,102 +149,120 @@ exports.updateProfileStudentByAdmin = expressAsyncHandler(
  * @access Auth
  */
 exports.takeExam = expressAsyncHandler(async (req, res, next) => {
-    const { examId } = req?.params;
-    const exam = await Exam.findById(examId).populate("questions");
-    if (!exam) {
-        return next(new ErrorHandler("Invalid id exam", 404));
+  const { examId } = req?.params;
+  const exam = await Exam.findById(examId).populate("questions");
+  if (!exam) {
+    return next(new ErrorHandler("Invalid id exam", 404));
+  }
+
+  // check if student is suspended
+  if (req?.user.isSuspended)
+    return next(new ErrorHandler("You are suspended from the school.", 401));
+
+  // check if student has already taken this exam
+  const checkExam = await ExamResult.findOne({
+    student: req?.user?.id,
+    exam: examId,
+  });
+  if (checkExam) {
+    return next(new ErrorHandler("You have already taken this exam", 401));
+  }
+
+  const questions = exam?.questions;
+  const { answers } = req?.body;
+  let correctAnswers = 0;
+  let wrongAnswers = 0;
+  let score = 0;
+  let totalQuestions = questions.length;
+
+  if (totalQuestions === answers.length) {
+    for (let i = 0; i < totalQuestions; i++) {
+      const question = questions[i];
+      if (question.answer === answers[i]) {
+        correctAnswers++;
+        score++;
+        question.isCorrect = true;
+      } else {
+        wrongAnswers++;
+        question.isCorrect = false;
+      }
     }
+  } else {
+    return next(new ErrorHandler("You must answer all questions", 401));
+  }
 
-    // check if student has already taken this exam
-    const checkExam = await ExamResult.findOne({ student: req?.user?.id, exam: examId });
-    // if (checkExam) {
-    //     return next(new ErrorHandler("You have already taken this exam", 401));
-    // }
+  // calculate grade
+  let grade = (correctAnswers / totalQuestions) * 100;
+  let answeredQuestions = questions.map((question) => ({
+    question: question.question,
+    answer: question.answer,
+    isCorrect: question.isCorrect,
+  }));
 
-    const questions = exam?.questions;
-    const { answers } = req?.body;
-    let correctAnswers = 0;
-    let wrongAnswers = 0;
-    let score = 0;
-    let totalQuestions = questions.length;
+  // calculate status
+  let status = grade >= 50 ? "Pass" : "Fail";
+  let remarks;
+  if (grade >= 90) {
+    remarks = "Excellent";
+  } else if (grade >= 80) {
+    remarks = "Very Good";
+  } else if (grade >= 70) {
+    remarks = "Good";
+  } else if (grade >= 60) {
+    remarks = "Fair";
+  } else if (grade >= 50) {
+    remarks = "Pass";
+  } else {
+    remarks = "Fail";
+  }
 
-    if(totalQuestions === answers.length) {
-        for (let i = 0; i < totalQuestions; i++) {
-            const question = questions[i];
-            if (question.answer === answers[i]) {
-                correctAnswers++;
-                score++;
-                question.isCorrect = true;
-            } else {
-                wrongAnswers++;
-                question.isCorrect = false;
-            }
-        }
-    }else{
-        return next(new ErrorHandler("You must answer all questions", 401));
+  // save exam result
+  const examResult = await ExamResult.create({
+    student: req?.user?.id,
+    exam,
+    answeredQuestions,
+    score,
+    grade,
+    status,
+    remarks,
+    classLevel: exam?.classLevel,
+    academicYear: exam?.academicYear,
+    academicTerm: exam?.academicTerm,
+  });
+  await Student.findByIdAndUpdate(
+    req?.user?.id,
+    {
+      $addToSet: { examResults: examResult?._id },
+    },
+    { new: true }
+  );
+
+  // Promotion
+  let { currentClassLevel } = req?.user;
+  if (status === "Pass") {
+    let split = currentClassLevel?.split(" ");
+    let newClassLevel;
+    if (split[1] === "0") {
+      newClassLevel = `${split[0]} 1`;
+    } else if (split[1] === "1") {
+      newClassLevel = `${split[0]} 2`;
+    } else if (split[1] === "2") {
+      newClassLevel = `${split[0]} 3`;
+    } else if (split[1] === "3") {
+      newClassLevel = `${split[0]} 4`;
+    } else if (split[1] === "4") {
+      newClassLevel = `${split[0]} 5`;
+    } else if (split[1] === "5") {
+      newClassLevel = split.join(" ");
     }
-
-    // calculate grade
-    let grade = (correctAnswers / totalQuestions) * 100;
-    let answeredQuestions = questions.map(question =>(
-        {
-            question: question.question,
-            answer: question.answer,
-            isCorrect: question.isCorrect
-        }
-    ));
-
-    let status = grade >= 50 ? "Pass" : "Fail";
-    let remarks;
-    if(grade >= 90){
-        remarks = "Excellent";
-    }else if(grade >= 80){
-        remarks = "Very Good";
-    }else if(grade >= 70){
-        remarks = "Good";
-    }else if(grade >= 60){
-        remarks = "Fair";
-    }else if(grade >= 50){
-        remarks = "Pass";
-    }else{
-        remarks = "Fail";
-    }
-    // const examResult = await ExamResult.create({
-    //     student: req?.user?.id,
-    //     exam,
-    //     score,
-    //     grade,
-    //     status,
-    //     remarks,
-    //     classLevel: exam?.classLevel,
-    //     academicYear: exam?.academicYear,
-    //     academicTerm: exam?.academicTerm,
-    // });
-    // await Student.findByIdAndUpdate(req?.user?.id, {
-    //     $addToSet: { examResults: examResult?._id },
-    // },{new: true});
-
-    // Promotion
-    let { currentClassLevel } = req?.user;
-    let level;
-    if(status === "Pass"){
-        let split = currentClassLevel?.split(" ");
-        let newClassLevel;
-        if(split[1] === "0"){
-            newClassLevel = `${split[0]} 1`;
-        }else if(split[1] === "1"){
-            newClassLevel = `${split[0]} 2`;
-        }else if(split[1] === "2"){
-            newClassLevel = `${split[0]} 3`;
-        }else if(split[1] === "3"){
-            newClassLevel = `${split[0]} 4`;
-        }else if (split[1] === "4") {
-            newClassLevel = `${split[0]} 5`;
-        }else if (split[1] === "5") {
-            newClassLevel = split.join(" ");
-        }
-        split = newClassLevel;
-        level = await Student.findByIdAndUpdate(req?.user?.id, {$addToSet: {classLevels: split}},{new: true});
-    }
-    res?.json({totalQuestions,status,correctAnswers, wrongAnswers, score, grade,remarks,level: level.currentClassLevel, answeredQuestions})
+    split = newClassLevel;
+    await Student.findByIdAndUpdate(
+      req?.user?.id,
+      { $addToSet: { classLevels: split } },
+      { new: true }
+    );
+  }
+  res?.json({
+      message: "Exam taken successfully, please check your result",
+  });
 });

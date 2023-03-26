@@ -9,7 +9,8 @@ const {
   updateProfileStudent,
   getProfileStudent,
   getAllStudents,
-  updateProfileStudentByAdmin, takeExam,
+  updateProfileStudentByAdmin,
+  takeExam,
 } = require("../../services/academics/studentServices");
 const Auth = require("../../middlewares/Auth/Auth");
 const { permissions } = require("../../middlewares/Auth/permissions");

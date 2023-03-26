@@ -42,10 +42,12 @@ const studentSchema = new Schema(
       type: Boolean,
       default: false,
     },
-    classLevels: [{
+    classLevels: [
+      {
         type: String,
-        default: "Level 0"
-    }],
+        default: "Level 0",
+      },
+    ],
     currentClassLevel: {
       type: String,
       default: function () {

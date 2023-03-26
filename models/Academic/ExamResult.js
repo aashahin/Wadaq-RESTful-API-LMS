@@ -16,6 +16,7 @@ const examResultSchema = new Schema(
       type: Number,
       required: [true, "Please Enter Your Score."],
     },
+    answeredQuestions: [Object],
     status: {
       type: String,
       enum: ["Pass", "Fail"],
