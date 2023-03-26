@@ -64,11 +64,11 @@ exports.loginTeacher = expressAsyncHandler(async (req, res, next) => {
 exports.getAllTeachers = expressAsyncHandler(async (req, res, next) => {
   const model = Teacher.find();
   const count = await Teacher.countDocuments();
-    const data = await new ApiFeatures(model, req?.query)
-        .search()
-        .paginate(count)
+  const data = await new ApiFeatures(model, req?.query)
+    .search()
+    .paginate(count);
 
-    const { pagination } = data;
+  const { pagination } = data;
   res?.json({ pagination, data: data.query });
 });
 // Get Profile Teacher

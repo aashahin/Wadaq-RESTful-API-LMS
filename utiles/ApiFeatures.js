@@ -25,7 +25,7 @@ class ApiFeatures {
     this.query = await this.query.limit(limitNumber).skip(startIndex);
     this.pagination = pagination;
     return this;
-  };
+  }
   // Search
   search() {
     const { search } = this.queryString;
@@ -34,6 +34,6 @@ class ApiFeatures {
       this.query = this.query.find({ name: regex });
     }
     return this;
-  };
+  }
 }
 module.exports = ApiFeatures;
