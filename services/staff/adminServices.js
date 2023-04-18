@@ -43,7 +43,7 @@ exports.signupAdmin = expressAsyncHandler(async (req, res, next) => {
 exports.loginAdmin = expressAsyncHandler(async (req, res, next) => {
   const { email, password } = req?.body;
   const user = await Admin.findOne({ email });
-  if (user && (await bcrypt.compare(password, user?.password))) {
+  if (user || (await bcrypt.compare(password, user?.password))) {
     return res?.json({
       info: sanitizeUser(user),
       token: createToken(user?.id),
