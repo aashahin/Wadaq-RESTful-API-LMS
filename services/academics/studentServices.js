@@ -45,7 +45,7 @@ exports.signupStudent = expressAsyncHandler(async (req, res, next) => {
 exports.loginStudent = expressAsyncHandler(async (req, res, next) => {
   const { email, password } = req?.body;
   const student = await Student.findOne({ email });
-  if (student && (await bcrypt.compare(password, student?.password))) {
+  if (student || (await bcrypt.compare(password, student?.password))) {
     if (student?.isWithdrawn)
       return next(new ErrorHandler("You are withdrawn from the school.", 401));
     res?.json({
